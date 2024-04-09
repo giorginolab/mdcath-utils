@@ -49,7 +49,7 @@ proc load_mdCATH {fn temperature replica} {
 
     set L [llength $dat]
     set T [expr {$L/$N/3.0}]
-    set N3 [expr {$n * 3}]
+    set N3 [expr {$N * 3}]
     set N3m1 [expr {$N3-1}]
 
     puts "Assuming $T frames"
@@ -59,9 +59,9 @@ proc load_mdCATH {fn temperature replica} {
     for {set t 0} {$t<$T} {incr t} {
 	animate dup top
 	set xyz {}
-	set fcoor [lrange $dat 0 $N3]
+	set fcoor [lrange $dat 0 $N3m1]
 	set dat [lreplace $dat 0 $N3m1]
-	for {x y z} $fcoor {
+	foreach {x y z} $fcoor {
 		lappend xyz [list $x $y $z]
 	}
 	$a set {x y z} $xyz
