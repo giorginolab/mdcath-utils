@@ -8,7 +8,6 @@ The `load_mdCATH` procedure loads molecular dynamics (MD) simulation data from a
 
 #### Usage
 ```tcl
-source load_mdCATH.tcl
 load_mdCATH filename temperature replica
 ```
 
@@ -27,6 +26,7 @@ load_mdCATH filename temperature replica
 
 #### Example Call
 ```tcl
+source load_mdCATH.tcl
 load_mdCATH cath_dataset_153lA00.h5 320 1
 ```
 This call loads the MD simulation data from `path/to/simulation.h5` for the simulation run at 320 Kelvin and the first replica.

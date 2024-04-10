@@ -71,4 +71,7 @@ proc load_mdCATH {fn temperature replica} {
         $a update
     }
     $a delete
+    mol rename top "mdCATH: $code $temperatureK $replica"
+
+    # TODO set box
 }
