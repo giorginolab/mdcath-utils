@@ -2,6 +2,8 @@ import h5py
 import mdtraj as md
 import tempfile
 import numpy as np
+import argparse
+
 
 def convert_to_mdtraj(h5, temp, replica):
     """
@@ -97,4 +99,21 @@ def convert_to_files(fn,
             trj = convert_to_mdtraj(h5, temp, replica)
             trj.save_xtc(xtcpath)
             print(f"Wrote {xtcpath}")
-        
+
+
+def main():
+    parser = argparse.ArgumentParser(description='Convert H5 file data to PDB and XTC files.')
+    parser.add_argument('fn', type=str, help='File name or path to the H5 file containing simulation data.')
+    parser.add_argument('--basename', type=str, help='Base name for output files, defaults to domain ID from H5 file.', default=None)
+    parser.add_argument('--temp_list', type=int,  nargs='+', help='List of temperatures.',
+                        default=[320, 348, 379, 413, 450])
+    parser.add_argument('--replica_list', type=int, nargs='+', help='List of replicas.',
+                        default=[0,1,2,3,4])
+    
+    args = parser.parse_args()
+
+    convert_to_files(args.fn, args.basename, args.temp_list, args.replica_list)
+
+if __name__ == "__main__":
+    main()
+
