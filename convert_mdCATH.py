@@ -49,12 +49,41 @@ def convert_to_mdtraj(h5, temp, replica):
     return trj
 
 def convert_to_files(fn, 
-                     basename, 
+                     basename=None, 
                      temp_list=[320, 348, 379, 413, 450],
                      replica_list=[0,1,2,3,4]):
+    """
+    Converts data from an H5 file to separate PDB and XTC files based on specified temperatures and replicas.
+
+    This function reads protein atom structures and simulation data from an H5 file and writes a single PDB file
+    and multiple XTC files. Each XTC file corresponds to a specific temperature and replica combination. The 
+    function uses `convert_to_mdtraj` to generate MDTraj trajectory objects which are then saved in the XTC format.
+
+    Parameters:
+    fn : str
+        The file name or path to the H5 file containing the simulation data.
+    basename : str
+        The base name to use for output files.  If None, it is taken from the domain ID.
+    temp_list : list of int, optional
+        A list of temperatures (in Kelvin) for which the simulations were run. Defaults to [320, 348, 379, 413, 450].
+    replica_list : list of int, optional
+        A list of replica numbers to extract data for. Defaults to [0, 1, 2, 3, 4].
+
+    Outputs:
+    Creates a PDB file named `{basename}.pdb` and multiple XTC files named `{basename}_{temp}_{replica}.xtc`, 
+    where `{temp}` and `{replica}` are values from `temp_list` and `replica_list`.
+
+    Example:
+    -------
+    # Convert data to files with base name 'protein_simulation'
+    convert_to_files('simulation_data.h5', 'protein_simulation')
+    """
 
     h5 = h5py.File(fn)
     code = [_ for _ in h5][0]
+
+    if not basename:
+        basename = code
 
     pdbpath = f"{basename}.pdb"
     with open(pdbpath, "wb") as pdbfile:
