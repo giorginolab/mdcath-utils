@@ -1,7 +1,7 @@
 proc load_mdCATH {fn temperature replica} {
 
     set pid [pid]
- 
+
     # Try to execute h5ls and handle errors
     set status [catch {exec h5ls $fn} tmp]
     if {$status} {
@@ -10,7 +10,7 @@ proc load_mdCATH {fn temperature replica} {
     set code [lindex $tmp 0]
 
     set tmpdir $::env(TMPDIR)
-    set pdbname $tmpdir/loadmdcath.pdb 
+    set pdbname $tmpdir/loadmdcath.pdb
 
     # Handle potential errors from h5dump
     if {[catch {exec h5dump -b -o $pdbname -d /$code/pdbProteinAtoms $fn} result]} {
@@ -57,14 +57,14 @@ proc load_mdCATH {fn temperature replica} {
     set a [atomselect top all]
 
     for {set t 0} {$t<$T} {incr t} {
-	animate dup top
-	set xyz {}
-	set fcoor [lrange $dat 0 $N3m1]
-	set dat [lreplace $dat 0 $N3m1]
-	foreach {x y z} $fcoor {
-		lappend xyz [list $x $y $z]
-	}
-	$a set {x y z} $xyz
-	$a update
+        animate dup top
+        set xyz {}
+        set fcoor [lrange $dat 0 $N3m1]
+        set dat [lreplace $dat 0 $N3m1]
+        foreach {x y z} $fcoor {
+            lappend xyz [list $x $y $z]
+        }
+        $a set {x y z} $xyz
+        $a update
     }
 }
