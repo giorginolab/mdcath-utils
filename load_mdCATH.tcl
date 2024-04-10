@@ -10,25 +10,27 @@ proc load_mdCATH {fn temperature replica} {
     set code [lindex $tmp 0]
 
     set tmpdir $::env(TMPDIR)
-    set pdbname $tmpdir/loadmdcath.pdb
+    set pdbname $tmpdir/loadmdcath.$pid.pdb
 
     # Handle potential errors from h5dump
     if {[catch {exec h5dump -b -o $pdbname -d /$code/pdbProteinAtoms $fn} result]} {
         return -code error "Error dumping pdbProteinAtoms from $fn: $result"
     }
 
-    set cbin $tmpdir/coords.bin
-    if {[catch {exec h5dump -b -o $cbin -d /$code/sims${temperature}K/$replica/coords $fn} result]} {
-        return -code error "Error dumping coords from $fn: $result"
-    }
-
     # Load the molecular data
     mol new $pdbname
+    file delete $pdbname
+
     set N [molinfo top get numatoms]
     if {$N == 0} {
         return -code error "No atoms found in the molecule loaded from $pdbname"
     }
+
     animate delete all
+    set cbin $tmpdir/loadmdcath.$pid.coords.bin
+    if {[catch {exec h5dump -b -o $cbin -d /$code/sims${temperature}K/$replica/coords $fn} result]} {
+        return -code error "Error dumping coords from $fn: $result"
+    }
 
     # Handle file opening and binary data reading
     if {[catch {open $cbin r} fp msg]} {
@@ -40,6 +42,7 @@ proc load_mdCATH {fn temperature replica} {
         return -code error "Error reading data from coordinates file $cbin"
     }
     close $fp
+    file delete $cbin
 
     # Binary data processing
     set M [binary scan $cdat f* dat]

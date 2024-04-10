@@ -27,7 +27,7 @@ load_mdCATH filename temperature replica
 
 #### Example Call
 ```tcl
-load_mdCATH "path/to/simulation.h5" 320 1
+load_mdCATH cath_dataset_153lA00.h5 320 1
 ```
 This call loads the MD simulation data from `path/to/simulation.h5` for the simulation run at 320 Kelvin and the first replica.
 
