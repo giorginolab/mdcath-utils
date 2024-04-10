@@ -1,13 +1,11 @@
 # Helper functions for the mdCATH dataset
 
 
+## Command-line conversion
 
-### File Documentation: `convert_mdCATH.py`
+Converts an mdCATH h5 file to PDB and XTC.
 
-Converts an mdCATH h5 file to PDB and XTC, or to an MDTraj trajectory object. See
-docstrings for Python usage. 
-
-Command-line usage:
+#### Usage
 
 ```bash
 convert_mdCATH.py [-h] [--basename BASENAME] [--temp_list TEMP_LIST [TEMP_LIST ...]] [--replica_list REPLICA_LIST [REPLICA_LIST ...]] fn
@@ -16,10 +14,14 @@ convert_mdCATH.py [-h] [--basename BASENAME] [--temp_list TEMP_LIST [TEMP_LIST .
 Requires the `mdtraj` package.
 
 
+## Python/MDTraj
 
-### Function Documentation: `load_mdCATH`
+A Python function is provided to convert to an MDTraj trajectory object for
+further analysis. See  docstrings inside `convert_mdCATH.py` for Python usage. 
 
-#### Description
+
+## VMD/TCL
+
 The `load_mdCATH` VMD/TCL procedure loads molecular dynamics (MD) simulation data from a specified HDF5 file of the mdCATH dataset into VMD.  
 
 **Note:** The utilities `h5ls` and `h5dump` are required and must be accessible in the system's path.
