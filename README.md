@@ -10,7 +10,7 @@ docstrings for Python usage.
 Command-line usage:
 
 ```bash
-python convert_mdCATH cath_dataset_153lA00.h5 [basename] 
+convert_mdCATH.py [-h] [--basename BASENAME] [--temp_list TEMP_LIST [TEMP_LIST ...]] [--replica_list REPLICA_LIST [REPLICA_LIST ...]] fn
 ```
 
 Requires the `mdtraj` package.
