@@ -70,4 +70,5 @@ proc load_mdCATH {fn temperature replica} {
         $a set {x y z} $xyz
         $a update
     }
+    $a delete
 }
