@@ -47,3 +47,25 @@ def convert_to_mdtraj(h5, temp, replica):
     trj.xyz = coords.copy()/10.0
     trj.time = np.arange(1, coords.shape[0]+1)
     return trj
+
+def convert_to_files(fn, 
+                     basename, 
+                     temp_list=[320, 348, 379, 413, 450],
+                     replica_list=[0,1,2,3,4]):
+
+    h5 = h5py.File(fn)
+    code = [_ for _ in h5][0]
+
+    pdbpath = f"{basename}.pdb"
+    with open(pdbpath, "wb") as pdbfile:
+         pdb = h5[code]["pdbProteinAtoms"][()]
+         pdbfile.write(pdb)
+         print(f"Wrote {pdbpath}")
+    
+    for temp in temp_list:
+        for replica in replica_list:
+            xtcpath = f"{basename}_{temp}_{replica}.xtc"
+            trj = convert_to_mdtraj(h5, temp, replica)
+            trj.save_xtc(xtcpath)
+            print(f"Wrote {xtcpath}")
+        
