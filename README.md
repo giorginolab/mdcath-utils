@@ -11,13 +11,12 @@ Converts an mdCATH h5 file to PDB and XTC.
 convert_mdCATH.py [-h] [--basename BASENAME] [--temp_list TEMP_LIST [TEMP_LIST ...]] [--replica_list REPLICA_LIST [REPLICA_LIST ...]] fn
 ```
 
-Requires the `mdtraj` package.
+Requires the `mdtraj` and `h5py` packages.
 
 
-## Python/MDTraj
+## Python/MDTraj
 
-A Python function is provided to convert to an MDTraj trajectory object for
-further analysis. See  docstrings inside `convert_mdCATH.py` for Python usage. 
+A Python function is provided to convert to an MDTraj trajectory object for further analysis. See  docstrings inside `convert_mdCATH.py` for Python usage. 
 
 
 ## VMD/TCL
