@@ -7,9 +7,10 @@ import os
 
 def _open_h5_file(h5):
     if isinstance(h5, str):
-        h5=h5py.File(h5, 'r')
+        h5 = h5py.File(h5, "r")
     code = [_ for _ in h5][0]
     return h5, code
+
 
 def _extract_structure_and_coordinates(h5, code, temp, replica):
     """
@@ -34,8 +35,9 @@ def _extract_structure_and_coordinates(h5, code, temp, replica):
         pdbfile.write(pdb)
         pdbfile.flush()
         coords = h5[code][f"sims{temp}K"][f"{replica}"]["coords"][:]
-    coords = coords/10.
+    coords = coords / 10.0
     return pdbfile.name, coords
+
 
 def convert_to_mdtraj(h5, temp, replica):
     """
@@ -73,11 +75,12 @@ def convert_to_mdtraj(h5, temp, replica):
     # Now 'traj' can be used for analysis with MDTraj
     """
     import mdtraj as md
-    h5,code = _open_h5_file(h5)
+
+    h5, code = _open_h5_file(h5)
     pdb_file_name, coords = _extract_structure_and_coordinates(h5, code, temp, replica)
     trj = md.load(pdb_file_name)
     os.unlink(pdb_file_name)
-    trj.xyz = coords.copy() 
+    trj.xyz = coords.copy()
     trj.time = np.arange(1, coords.shape[0] + 1)
     return trj
 
@@ -119,17 +122,15 @@ def convert_to_moleculekit(h5, temp, replica):
     """
 
     import moleculekit.molecule as mk
-    h5,code = _open_h5_file(h5)
+
+    h5, code = _open_h5_file(h5)
     pdb_file_name, coords = _extract_structure_and_coordinates(h5, code, temp, replica)
     trj = mk.Molecule(pdb_file_name, name=f"{code}_{temp}_{replica}")
     os.unlink(pdb_file_name)
-    trj.coords = coords.transpose([1,2,0]).copy()
+    trj.coords = coords.transpose([1, 2, 0]).copy()
     trj.time = np.arange(1, coords.shape[0] + 1)
     # TODO? .step, .numframes
     return trj
-
-
-
 
 
 def convert_to_files(
