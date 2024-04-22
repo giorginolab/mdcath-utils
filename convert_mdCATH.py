@@ -34,7 +34,7 @@ def _extract_structure_and_coordinates(h5, code, temp, replica):
         pdbfile.write(pdb)
         pdbfile.flush()
         coords = h5[code][f"sims{temp}K"][f"{replica}"]["coords"][:]
-    coords = (coords/10.).copy()
+    coords = coords/10.
     return pdbfile.name, coords
 
 def convert_to_mdtraj(h5, temp, replica):
@@ -77,7 +77,7 @@ def convert_to_mdtraj(h5, temp, replica):
     pdb_file_name, coords = _extract_structure_and_coordinates(h5, code, temp, replica)
     trj = md.load(pdb_file_name)
     os.unlink(pdb_file_name)
-    trj.xyz = coords 
+    trj.xyz = coords.copy() 
     trj.time = np.arange(1, coords.shape[0] + 1)
     return trj
 
@@ -123,7 +123,7 @@ def convert_to_moleculekit(h5, temp, replica):
     pdb_file_name, coords = _extract_structure_and_coordinates(h5, code, temp, replica)
     trj = mk.Molecule(pdb_file_name, name=f"{code}_{temp}_{replica}")
     os.unlink(pdb_file_name)
-    trj.coords = coords.transpose([1,2,0])
+    trj.coords = coords.transpose([1,2,0]).copy()
     trj.time = np.arange(1, coords.shape[0] + 1)
     # TODO? .step, .numframes
     return trj
