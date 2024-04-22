@@ -2,7 +2,40 @@ import h5py
 import tempfile
 import numpy as np
 import argparse
+import os
 
+
+def _open_h5_file(h5):
+    if isinstance(h5, str):
+        h5=h5py.File(h5, 'r')
+    code = [_ for _ in h5][0]
+    return h5, code
+
+def _extract_structure_and_coordinates(h5, code, temp, replica):
+    """
+    Extracts the structure in PDB format and coordinates from an H5 file based on temperature and replica.
+
+    Parameters:
+    h5 : h5py.File
+        An opened H5 file object containing protein structures and simulation data.
+    code : str
+        The identifier for the dataset in the H5 file.
+    temp : int or float
+        The temperature (in Kelvin).
+    replica : int
+        The replica number.
+
+    Returns:
+    tuple
+        A tuple containing the PDB data as bytes and the coordinates as a numpy array.
+    """
+    with tempfile.NamedTemporaryFile(suffix=".pdb", delete=False) as pdbfile:
+        pdb = h5[code]["pdbProteinAtoms"][()]
+        pdbfile.write(pdb)
+        pdbfile.flush()
+        coords = h5[code][f"sims{temp}K"][f"{replica}"]["coords"][:]
+    coords = (coords/10.).copy()
+    return pdbfile.name, coords
 
 def convert_to_mdtraj(h5, temp, replica):
     """
@@ -40,18 +73,13 @@ def convert_to_mdtraj(h5, temp, replica):
     # Now 'traj' can be used for analysis with MDTraj
     """
     import mdtraj as md
-    if isinstance(h5, str):
-        h5 = h5py.File(h5)
-    code = [_ for _ in h5][0]
-    with tempfile.NamedTemporaryFile(suffix=".pdb") as pdbfile:
-        pdb = h5[code]["pdbProteinAtoms"][()]
-        pdbfile.write(pdb)
-        trj = md.load(pdbfile.name)
-    coords = h5[code][f"sims{temp}K"][f"{replica}"]["coords"][:]
-    trj.xyz = coords.copy() / 10.0
+    h5,code = _open_h5_file(h5)
+    pdb_file_name, coords = _extract_structure_and_coordinates(h5, code, temp, replica)
+    trj = md.load(pdb_file_name)
+    os.unlink(pdb_file_name)
+    trj.xyz = coords 
     trj.time = np.arange(1, coords.shape[0] + 1)
     return trj
-
 
 
 def convert_to_moleculekit(h5, temp, replica):
@@ -89,19 +117,19 @@ def convert_to_moleculekit(h5, temp, replica):
 
     # Now 'traj' can be used for analysis with HTMD
     """
+
     import moleculekit.molecule as mk
-    if isinstance(h5, str):
-        h5 = h5py.File(h5)
-    code = [_ for _ in h5][0]
-    with tempfile.NamedTemporaryFile(suffix=".pdb") as pdbfile:
-        pdb = h5[code]["pdbProteinAtoms"][()]
-        pdbfile.write(pdb)
-        trj = mk.Molecule(pdbfile.name, name=f"{code}_{temp}_{replica}")
-    coords = h5[code][f"sims{temp}K"][f"{replica}"]["coords"][:]
-    trj.coords = coords.copy().transpose([1,2,0]) / 10.0
+    h5,code = _open_h5_file(h5)
+    pdb_file_name, coords = _extract_structure_and_coordinates(h5, code, temp, replica)
+    trj = mk.Molecule(pdb_file_name, name=f"{code}_{temp}_{replica}")
+    os.unlink(pdb_file_name)
+    trj.coords = coords.transpose([1,2,0])
     trj.time = np.arange(1, coords.shape[0] + 1)
     # TODO? .step, .numframes
     return trj
+
+
+
 
 
 def convert_to_files(
@@ -134,8 +162,7 @@ def convert_to_files(
     convert_to_files('simulation_data.h5', 'protein_simulation')
     """
 
-    h5 = h5py.File(fn)
-    code = [_ for _ in h5][0]
+    h5, code = _open_h5_file(fn)
 
     if not basename:
         basename = code
