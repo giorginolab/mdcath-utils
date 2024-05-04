@@ -14,7 +14,7 @@ convert_mdCATH.py [-h] [--basename BASENAME] [--temp_list TEMP_LIST [TEMP_LIST .
 Requires the `mdtraj` and `h5py` packages.
 
 
-## Python/MDTraj
+## Python: MDTraj and MoleculeKit/HTMD
 
 A Python function is provided to convert to an MDTraj trajectory object for further analysis. See  docstrings inside `convert_mdCATH.py` for Python usage. 
 
