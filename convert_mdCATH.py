@@ -34,7 +34,7 @@ def _extract_structure_and_coordinates(h5, code, temp, replica):
         pdb = h5[code]["pdbProteinAtoms"][()]
         pdbfile.write(pdb)
         pdbfile.flush()
-        coords = h5[code][f"sims{temp}K"][f"{replica}"]["coords"][:]
+        coords = h5[code][str(temp)][str(replica)]["coords"][:]
     coords = coords / 10.0
     return pdbfile.name, coords
 
