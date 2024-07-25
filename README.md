@@ -1,9 +1,10 @@
 # Helper functions for the mdCATH dataset
 
+This repository contains utility functions related to the mdCATH dataset described in the paper [mdCATH: A Large-Scale MD Dataset for Data-Driven Computational Biophysics](https://arxiv.org/abs/2407.14794v1). The dataset files are available at https://huggingface.co/datasets/compsciencelab/mdCATH .
 
 ## Command-line conversion
 
-Converts an mdCATH h5 file to PDB and XTC.
+Converts an mdCATH h5 file to the corresponding PDB and XTC.
 
 #### Usage
 
@@ -11,7 +12,7 @@ Converts an mdCATH h5 file to PDB and XTC.
 convert_mdCATH.py [-h] [--basename BASENAME] [--temp_list TEMP_LIST [TEMP_LIST ...]] [--replica_list REPLICA_LIST [REPLICA_LIST ...]] fn
 ```
 
-Requires the `mdtraj` and `h5py` packages.
+**Note:** Requires the `mdtraj` and `h5py` packages.
 
 
 ## Python: MDTraj and MoleculeKit/HTMD
@@ -55,4 +56,20 @@ This call loads the MD simulation data from `path/to/simulation.h5` for the simu
 - Ensure that the environment variable `TMPDIR` is set as it is used to define temporary file paths.
 - This procedure assumes that the required utilities `h5ls` and `h5dump` are installed and accessible in the system's path.
 
+
+## Citation
+
+> Antonio Mirarchi, Toni Giorgino and Gianni De Fabritiis. *mdCATH: A Large-Scale MD Dataset for Data-Driven Computational Biophysics*. https://arxiv.org/abs/2407.14794 
+
+```
+@misc{mirarchi2024mdcathlargescalemddataset,
+      title={mdCATH: A Large-Scale MD Dataset for Data-Driven Computational Biophysics}, 
+      author={Antonio Mirarchi and Toni Giorgino and Gianni De Fabritiis},
+      year={2024},
+      eprint={2407.14794},
+      archivePrefix={arXiv},
+      primaryClass={q-bio.BM},
+      url={https://arxiv.org/abs/2407.14794}, 
+}
+```
 
