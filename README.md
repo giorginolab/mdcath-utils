@@ -1,8 +1,11 @@
 # Helper functions for the mdCATH dataset
 
-**Warning. This repository is now obsolete. The content has been incorporated into https://github.com/compsciencelab/mdCATH (directory `user-utils`).**
+> [!IMPORTANT]
+> This repository is now obsolete. The content has been merged into https://github.com/compsciencelab/mdCATH (directory `user-utils`).
 
-This repository contains utility functions related to the mdCATH dataset described in the paper [mdCATH: A Large-Scale MD Dataset for Data-Driven Computational Biophysics](https://arxiv.org/abs/2407.14794v1). The dataset files are available at https://huggingface.co/datasets/compsciencelab/mdCATH .
+----
+
+This repository contained utility functions related to the mdCATH dataset described in the paper [mdCATH: A Large-Scale MD Dataset for Data-Driven Computational Biophysics](https://arxiv.org/abs/2407.14794v1). The dataset files themselves are available at https://huggingface.co/datasets/compsciencelab/mdCATH .
 
 
 
